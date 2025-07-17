@@ -1,0 +1,12 @@
+.venv/
+Corpus_completo/
+__pycache__/
+.env
+0.26.0
+0.26.0'
+features_train.ipynb
+implementation_model.ipynb
+index.html
+pruebas_deepseek.ipynb
+crf_model_1.pkl
+main.py
