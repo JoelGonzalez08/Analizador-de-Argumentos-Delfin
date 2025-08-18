@@ -128,8 +128,10 @@
       // counts
       const pSpans = extractSpans(prediction,"B-P","I-P"),
             cSpans = extractSpans(prediction,"B-C","I-C");
-      document.getElementById("analysis-footer")
-              .textContent = `${pSpans.length} premises · ${cSpans.length} conclusions`;
+      document.getElementById("analysis-footer").innerHTML = `
+      <span class="text-blue-600 font-semibold">${pSpans.length} premises</span> · 
+      <span class="text-orange-500 font-semibold">${cSpans.length} conclusions</span>
+`;
 
       // recommend
       const res2 = await fetch(`${API_BASE}/recommend`,{

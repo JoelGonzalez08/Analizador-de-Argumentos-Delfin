@@ -14,11 +14,11 @@ API_KEY = os.getenv("API_KEY")
 if not API_KEY:
     raise ValueError("API_KEY no está definida en el entorno. Por favor, define la variable de entorno API_KEY.")
 # Cargar modelo CRF
-crf_model = joblib.load("crf_model.pkl")
+crf_model = joblib.load("crf_model_fold_3_7.pkl")
 
 # Inicializar Stanza
 stanza.download('es', processors='tokenize,pos,lemma')
-nlp_stanza = stanza.Pipeline('es', use_gpu=False)
+nlp_stanza = stanza.Pipeline('es')
 
 # Esquemas de petición
 class TextRequest(BaseModel):
@@ -50,7 +50,7 @@ async def predict(request: TextRequest):
 
     # Features + predicción
     import features
-    feats  = features.sent2features(tokens, ventana=1, incluir_sentimiento=True, lemma=True)
+    feats  = features.sent2features(tokens, ventana=3, incluir_sentimiento=True, lemma=True)
     labels = crf_model.predict_single(feats)
     return {
         "prediction": [
@@ -101,6 +101,38 @@ async def recommend(req: RecommendRequest):
 
     recs = [line for line in text.split("\n") if line.strip()]
     return {"recommendations": recs}
+
+@app.post("/predict_bert")
+async def predict_bert(request: TextRequest):
+    from transformers import AutoTokenizer, AutoModelForTokenClassification
+    import torch
+
+    # Cargar el modelo y el tokenizador
+    model = AutoModelForTokenClassification.from_pretrained("bert_argument_model_fold_7")
+    tokenizer = AutoTokenizer.from_pretrained("bert_argument_model_fold_7")
+
+    texto = request.text.strip()
+    if not texto:
+        raise HTTPException(400, "El campo 'text' no puede estar vacío.")
+
+    # Tokenización
+    inputs = tokenizer(texto, return_tensors="pt", truncation=True, padding=True)
+    label_list = ['O', 'B-P', 'I-P', 'B-C', 'I-C']
+    label2id = {label: i for i, label in enumerate(label_list)}
+    id2label = {i: label for label, i in label2id.items()}
+    
+    # Predicción
+    
+    outputs = model(**inputs)
+    
+    logits = outputs.logits.argmax(dim=-1)
+    labels = [id2label[label_id.item()] for label_id in logits[0]]
+    
+    tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
+    prediction = [{"token": token, "label": label} for token, label in zip(tokens, labels)]
+    return {
+        "prediction": prediction
+    }
 
 # Para arrancar:
 #   pip install fastapi uvicorn stanza joblib openai sklearn-crfsuite
