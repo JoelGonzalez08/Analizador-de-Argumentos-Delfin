@@ -80,7 +80,7 @@ async def recommend(req: RecommendRequest):
         resp = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "Eres un experto en argumentación académica. Responde de forma clara y concisa."},
+                {"role": "developer", "content": "Eres un experto en argumentación académica. Responde de forma clara y concisa."},
                 {"role": "user",   "content": prompt}
             ],
             max_tokens=200,
@@ -101,38 +101,6 @@ async def recommend(req: RecommendRequest):
 
     recs = [line for line in text.split("\n") if line.strip()]
     return {"recommendations": recs}
-
-@app.post("/predict_bert")
-async def predict_bert(request: TextRequest):
-    from transformers import AutoTokenizer, AutoModelForTokenClassification
-    import torch
-
-    # Cargar el modelo y el tokenizador
-    model = AutoModelForTokenClassification.from_pretrained("bert_argument_model_fold_7")
-    tokenizer = AutoTokenizer.from_pretrained("bert_argument_model_fold_7")
-
-    texto = request.text.strip()
-    if not texto:
-        raise HTTPException(400, "El campo 'text' no puede estar vacío.")
-
-    # Tokenización
-    inputs = tokenizer(texto, return_tensors="pt", truncation=True, padding=True)
-    label_list = ['O', 'B-P', 'I-P', 'B-C', 'I-C']
-    label2id = {label: i for i, label in enumerate(label_list)}
-    id2label = {i: label for label, i in label2id.items()}
-    
-    # Predicción
-    
-    outputs = model(**inputs)
-    
-    logits = outputs.logits.argmax(dim=-1)
-    labels = [id2label[label_id.item()] for label_id in logits[0]]
-    
-    tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
-    prediction = [{"token": token, "label": label} for token, label in zip(tokens, labels)]
-    return {
-        "prediction": prediction
-    }
 
 # Para arrancar:
 #   pip install fastapi uvicorn stanza joblib openai sklearn-crfsuite

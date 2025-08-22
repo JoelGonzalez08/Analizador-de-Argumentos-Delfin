@@ -15,6 +15,7 @@ crf_model.pkl
 main.py
 stadistics_corpus.ipynb
 train_with_bert.ipynb
+classification_LLM.ipynb  
 
 crf_model_fold_1_0.pkl
 crf_model_fold_1_1.pkl
