@@ -1,4 +1,5 @@
 .venv/
+.vscode/
 Corpus_completo/
 __pycache__/
 .env
@@ -6,7 +7,6 @@ __pycache__/
 0.26.0'
 features_train.ipynb
 implementation_model.ipynb
-index.html
 pruebas_LLM.ipynb
 bert_argument_model/
 bert_argument_model_fold_7/
@@ -15,7 +15,8 @@ crf_model.pkl
 main.py
 stadistics_corpus.ipynb
 train_with_bert.ipynb
-classification_LLM.ipynb  
+classification_LLM.ipynb
+sequential_LLM.ipynb  
 
 crf_model_fold_1_0.pkl
 crf_model_fold_1_1.pkl
