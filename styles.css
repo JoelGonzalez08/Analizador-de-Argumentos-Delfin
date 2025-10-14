@@ -34,11 +34,13 @@ body {
   border: 1px solid #d1d5db;
   transition: all 0.2s;
   min-width: 40px;
+  cursor: pointer;
 }
 
 .toolbar-btn:hover {
   background-color: #f9fafb;
   border-color: #9ca3af;
+  transform: translateY(-1px);
 }
 
 .toolbar-btn:focus {
@@ -46,9 +48,18 @@ body {
   box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px white;
 }
 
-.toolbar-btn:hover {
+/* Estado activo de los botones */
+.toolbar-btn.active {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #2563eb;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.toolbar-btn.active:hover {
+  background-color: #2563eb;
+  border-color: #1d4ed8;
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
 }
 
 .toolbar-btn:active {
@@ -98,17 +109,75 @@ body {
   outline: none;
   border: 1px solid transparent;
   transition: border-color 0.2s ease;
+  position: relative;
 }
 
 .editor-content:focus {
   border-color: var(--primary-color);
 }
 
-.editor-content:empty::before {
-  content: "Escribe o pega tu texto argumentativo aquí...";
-  color: var(--text-secondary);
-  visibility: hidden;
+/* Estilos para listas en el editor */
+.editor-content ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  padding-left: 0;
+}
+
+.editor-content ol {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  padding-left: 0;
+}
+
+.editor-content li {
+  margin-bottom: 0.5rem;
+  display: list-item;
+  list-style-position: outside;
+}
+
+.editor-content ul ul {
+  list-style-type: circle;
+  margin-top: 0.5rem;
+}
+
+.editor-content ul ul ul {
+  list-style-type: square;
+}
+
+.editor-content ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.5rem;
+}
+
+.editor-content ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Placeholder cuando el editor está vacío */
+.editor-content.show-placeholder::before {
+  content: attr(data-placeholder-main);
+  color: #9ca3af;
   font-style: italic;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.editor-content.show-placeholder::after {
+  content: attr(data-placeholder-tip);
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-style: italic;
+  pointer-events: none;
+  position: absolute;
+  top: 2rem;
+  left: 0;
+  font-weight: 400;
+  z-index: 1;
 }
 
 /* Scrollbar personalizado */
@@ -439,3 +508,4 @@ body {
   background-color: #f59e0b;
   border-radius: 50%;
 }
+

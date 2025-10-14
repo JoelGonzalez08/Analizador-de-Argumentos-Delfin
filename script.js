@@ -17,15 +17,49 @@ class ArgumentAnalyzer {
     this.lastAnalysis = null;
     this.apiStatus = 'disconnected';
     
+    // Estado persistente de los botones de formato
+    this.formatState = {
+      bold: false,
+      italic: false,
+      insertUnorderedList: false,
+      insertOrderedList: false
+    };
+    
+    // Detectar borrado manual del usuario
+    this.hasUserDeletedContent = false;
+    
     this.init();
   }
 
   init() {
     this.setupElements();
+    this.initializeEditor();
     this.setupEventListeners();
     this.setupToolbar();
     this.checkApiStatus();
     this.updateWordCount();
+    this.handlePlaceholder();
+  }
+
+  initializeEditor() {
+    // Asegurar que el editor esté completamente vacío al inicio
+    this.editor.innerHTML = '';
+    // Resetear el estado del formato al inicializar
+    this.resetFormatState();
+  }
+
+  resetFormatState() {
+    this.formatState = {
+      bold: false,
+      italic: false,
+      insertUnorderedList: false,
+      insertOrderedList: false
+    };
+  }
+
+  resetFormatStateAndUpdate() {
+    this.resetFormatState();
+    this.updateToolbarState();
   }
 
   setupElements() {
@@ -50,15 +84,34 @@ class ArgumentAnalyzer {
     });
     
     // Editor
-    this.editor.addEventListener("input", () => this.updateWordCount());
+    this.editor.addEventListener("input", () => {
+      this.updateWordCount();
+      this.handlePlaceholder();
+      
+      // Solo resetear el estado si el editor está completamente vacío Y el usuario lo borró manualmente
+      if (this.isEditorEmpty() && this.hasUserDeletedContent) {
+        this.resetFormatStateAndUpdate();
+        this.hasUserDeletedContent = false;
+      }
+    });
+    
+    // Detectar cuando el usuario borra contenido
+    this.editor.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" || e.key === "Delete") {
+        this.hasUserDeletedContent = true;
+      }
+    });
+    
     this.editor.addEventListener("paste", (e) => this.handlePaste(e));
+    this.editor.addEventListener("focus", () => this.handlePlaceholder());
+    this.editor.addEventListener("blur", () => this.handlePlaceholder());
     
     // Teclas de acceso rápido
     document.addEventListener("keydown", (e) => this.handleKeyboardShortcuts(e));
   }
 
   setupToolbar() {
-    const toolbarButtons = {
+    this.toolbarButtons = {
       "btn-bold": "bold",
       "btn-italic": "italic",
       "btn-bullet": "insertUnorderedList",
@@ -67,17 +120,117 @@ class ArgumentAnalyzer {
       "btn-redo": "redo"
     };
 
-    Object.entries(toolbarButtons).forEach(([id, command]) => {
+    Object.entries(this.toolbarButtons).forEach(([id, command]) => {
       const button = document.getElementById(id);
       if (button) {
-        button.addEventListener("click", () => this.execCommand(command));
+        button.addEventListener("click", () => this.execCommand(command, button));
+      }
+    });
+
+    // Solo actualizar el estado de los botones en eventos específicos
+    this.editor.addEventListener("mouseup", (e) => {
+      // Solo actualizar si se cambió la selección
+      setTimeout(() => this.updateToolbarState(), 10);
+    });
+    
+    // Actualizar estado inicial
+    setTimeout(() => this.updateToolbarState(), 100);
+  }
+
+  execCommand(command, button) {
+    // Manejar el estado persistente de formato
+    if (command === "bold" || command === "italic") {
+      document.execCommand(command, false, null);
+      this.formatState[command] = !this.formatState[command];
+    } else if (command === "insertUnorderedList" || command === "insertOrderedList") {
+      this.handleListCommand(command);
+    } else {
+      document.execCommand(command, false, null);
+    }
+    
+    this.editor.focus();
+    
+    // Actualizar el estado visual del botón después de ejecutar el comando
+    setTimeout(() => this.updateToolbarState(), 10);
+  }
+
+  handleListCommand(command) {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const currentElement = range.commonAncestorContainer.nodeType === Node.TEXT_NODE 
+        ? range.commonAncestorContainer.parentElement 
+        : range.commonAncestorContainer;
+      
+      // Verificar si ya estamos en una lista del mismo tipo
+      const isInList = currentElement.closest(command === "insertUnorderedList" ? "ul" : "ol");
+      
+      if (isInList && this.formatState[command]) {
+        // Si ya estamos en una lista del mismo tipo y el estado está activo, salir de la lista
+        document.execCommand("outdent", false, null);
+        this.formatState[command] = false;
+        // Desactivar el otro tipo de lista también
+        const otherListType = command === "insertUnorderedList" ? "insertOrderedList" : "insertUnorderedList";
+        this.formatState[otherListType] = false;
+      } else {
+        // Si no estamos en una lista o estamos en una lista diferente, crear/cambiar la lista
+        document.execCommand(command, false, null);
+        this.formatState[command] = true;
+        // Desactivar el otro tipo de lista
+        const otherListType = command === "insertUnorderedList" ? "insertOrderedList" : "insertUnorderedList";
+        this.formatState[otherListType] = false;
+      }
+    } else {
+      // Si no hay selección, simplemente ejecutar el comando
+      document.execCommand(command, false, null);
+      this.formatState[command] = !this.formatState[command];
+    }
+  }
+
+  updateToolbarState() {
+    Object.entries(this.toolbarButtons).forEach(([id, command]) => {
+      const button = document.getElementById(id);
+      if (button) {
+        // Usar el estado persistente para botones de formato
+        if (this.formatState.hasOwnProperty(command)) {
+          button.classList.toggle("active", this.formatState[command]);
+        } else {
+          // Para comandos que no tienen estado persistente (undo/redo)
+          const isActive = this.isCommandActive(command);
+          button.classList.toggle("active", isActive);
+        }
       }
     });
   }
 
-  execCommand(command) {
-    document.execCommand(command, false, null);
-    this.editor.focus();
+  isCommandActive(command) {
+    try {
+      // Para comandos de lista, verificar de manera especial
+      if (command === "insertUnorderedList") {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const element = selection.getRangeAt(0).commonAncestorContainer;
+          const currentElement = element.nodeType === Node.TEXT_NODE ? element.parentElement : element;
+          return !!currentElement.closest("ul");
+        }
+        return false;
+      }
+      
+      if (command === "insertOrderedList") {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const element = selection.getRangeAt(0).commonAncestorContainer;
+          const currentElement = element.nodeType === Node.TEXT_NODE ? element.parentElement : element;
+          return !!currentElement.closest("ol");
+        }
+        return false;
+      }
+      
+      // Para otros comandos, usar queryCommandState
+      return document.queryCommandState(command);
+    } catch (e) {
+      return false;
+    }
   }
 
   handlePaste(event) {
@@ -137,11 +290,39 @@ class ArgumentAnalyzer {
 
   updateWordCount() {
     const text = this.editor.innerText || this.editor.textContent || "";
-    const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+    // Solo contar palabras si hay contenido real (no placeholder)
+    const isRealContent = text.trim() && !this.isEditorEmpty();
+    const wordCount = isRealContent ? text.trim().split(/\s+/).length : 0;
     
     const wordCountElement = document.getElementById("word-count");
     if (wordCountElement) {
       wordCountElement.textContent = `${wordCount} palabras`;
+    }
+  }
+
+  // Verificar si el editor está realmente vacío (sin contenido del usuario)
+  isEditorEmpty() {
+    const text = this.editor.innerText || this.editor.textContent || "";
+    const trimmedText = text.trim();
+    
+    // Verificar si está vacío o solo contiene caracteres de espacios/saltos de línea
+    if (trimmedText === "" || trimmedText === "\n" || trimmedText === "\r\n") {
+      return true;
+    }
+    
+    // También verificar el HTML para ver si solo contiene elementos vacíos
+    const innerHTML = this.editor.innerHTML.trim();
+    const onlyEmptyElements = /^(<br\s*\/?>|<div><br\s*\/?\><\/div>|<p><br\s*\/?\><\/p>|\s)*$/i.test(innerHTML);
+    
+    return onlyEmptyElements;
+  }
+
+  // Manejar la visibilidad del placeholder
+  handlePlaceholder() {
+    if (this.isEditorEmpty()) {
+      this.editor.classList.add('show-placeholder');
+    } else {
+      this.editor.classList.remove('show-placeholder');
     }
   }
 
@@ -317,9 +498,12 @@ class ArgumentAnalyzer {
   }
 
   updateCounters(premiseCount, conclusionCount) {
-    document.getElementById("premise-count").textContent = premiseCount;
-    document.getElementById("conclusion-count").textContent = conclusionCount;
-    
+    // Protege en caso de que el footer no exista
+    if (!this.analysisFooter) return;
+
+    // Sobrescribimos el HTML del footer con los contadores actualizados.
+    // Evitamos usar getElementById sobre elementos que pueden haber sido
+    // eliminados/recreados durante análisis previos.
     this.analysisFooter.innerHTML = `
       <div class="flex items-center space-x-4">
         <span class="premise-indicator">
@@ -337,7 +521,9 @@ class ArgumentAnalyzer {
 
   getWordCount() {
     const text = this.editor.innerText || this.editor.textContent || "";
-    return text.trim() ? text.trim().split(/\s+/).length : 0;
+    // Solo contar palabras si hay contenido real (no placeholder)
+    const isRealContent = text.trim() && !this.isEditorEmpty();
+    return isRealContent ? text.trim().split(/\s+/).length : 0;
   }
 
   renderRecommendations(recommendations, premises, conclusions) {
@@ -430,9 +616,12 @@ class ArgumentAnalyzer {
   updateTimestamp() {
     const now = new Date();
     const timeElement = document.getElementById("last-analyzed");
-    
-    timeElement.textContent = now.toLocaleTimeString("es-ES");
-    timeElement.setAttribute("datetime", now.toISOString());
+    if (timeElement) {
+      timeElement.textContent = now.toLocaleTimeString("es-ES");
+      timeElement.setAttribute("datetime", now.toISOString());
+    } else {
+      console.warn("updateTimestamp: elemento #last-analyzed no encontrado en el DOM");
+    }
   }
 
   showNotification(message, type = "info") {

@@ -11,13 +11,25 @@
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900 font-sans min-h-screen flex flex-col">
 	<!-- Header -->
 	<header class="bg-white shadow-sm border-b border-gray-200">
-		<div class="max-w-7xl mx-auto px-6 py-4">
-			<h1 class="text-2xl font-bold text-gray-800 flex items-center">
-				<span class="text-blue-600 mr-2">🧠</span>
-				Analizador de Argumentos
-			</h1>
-			<p class="text-gray-600 mt-1">Identifica premisas y conclusiones con IA</p>
-		</div>
+<div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+      <span class="text-blue-600 mr-2">🧠</span>
+      Analizador de Argumentos
+    </h1>
+    <p class="text-gray-600 text-sm mt-1">Identifica premisas y conclusiones con IA</p>
+  </div>
+
+  <!-- Botón para volver a la home -->
+  <nav>
+    <a href="home.html"
+       class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition"
+       title="Volver al inicio">
+      <span class="hidden sm:inline">Inicio</span>
+    </a>
+  </nav>
+</div>
+
 	</header>
 
 	<main class="flex-grow max-w-7xl mx-auto p-6 md:flex md:space-x-8">
@@ -55,9 +67,12 @@
 
 				<!-- Editor de texto -->
 				<div class="p-6">
-					<div id="editor" contenteditable="true" spellcheck="true" class="editor-content">
-						<p>Escribe o pega tu texto argumentativo aquí...</p>
-						<p class="text-gray-400 text-sm mt-4">💡 <strong>Consejo:</strong> Escribe un argumento claro con premisas que lleven a una conclusión.</p>
+					<div id="editor" 
+						 contenteditable="true" 
+						 spellcheck="true" 
+						 class="editor-content show-placeholder" 
+						 data-placeholder-main="Escribe o pega tu texto argumentativo aquí..."
+						 data-placeholder-tip="💡 Consejo: Escribe un argumento claro con premisas que lleven a una conclusión.">
 					</div>
 				</div>
 
