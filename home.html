@@ -1,150 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Analizador de Argumentos — Inicio</title>
-  <meta name="description" content="Bienvenida a la herramienta Analizador de Argumentos" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="styles.css" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Analizador de Argumentos - Interfaz Inteligente</title>
+	<meta name="description" content="Analiza y mejora tus argumentos con inteligencia artificial" />
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="styles.css" />
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900 font-sans min-h-screen flex flex-col">
-  <!-- Header -->
-  <header class="bg-white/90 backdrop-blur shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center">
-        <span class="text-blue-600 mr-2 text-2xl">🧠</span>
-        <div>
-          <h1 class="text-2xl font-bold text-gray-800">Analizador de Argumentos</h1>
-          <p class="text-gray-600 text-sm">Identifica premisas y conclusiones con IA</p>
-        </div>
-      </div>
-      <nav class="hidden md:flex items-center gap-4 text-sm">
-        <a href="home.html" class="text-blue-600 font-semibold">Inicio</a>
-        <a href="index.html" class="hover:text-blue-700">Analizador</a>
-        <a href="#equipo" class="hover:text-blue-700">Equipo</a>
-      </nav>
-    </div>
-  </header>
+	<!-- Header -->
+	<header class="bg-white shadow-sm border-b border-gray-200">
+<div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+      <span class="text-blue-600 mr-2">🧠</span>
+      Analizador de Argumentos
+    </h1>
+    <p class="text-gray-600 text-sm mt-1">Identifica premisas y conclusiones con IA</p>
+  </div>
 
-  <!-- Hero -->
-  <main class="flex-grow">
-    <section class="max-w-7xl mx-auto px-6 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-      <div>
-        <h2 class="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900">
-          Bienvenido/a a tu <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">interfaz inteligente</span>
-        </h2>
-        <p class="mt-5 text-gray-700 text-lg">
-          Esta herramienta te ayuda a <strong>detectar premisas y conclusiones</strong> en textos
-          argumentativos. Recibe sugerencias para fortalecer tu lógica, claridad y coherencia.
-        </p>
-        <div class="mt-8 flex items-center gap-4">
-          <a href="index.html"
-             class="inline-flex items-center px-5 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium shadow hover:opacity-95 transition">
-            Empezar a analizar <span class="ml-2">→</span>
-          </a>
-          <a href="#como-funciona" class="inline-flex items-center px-5 py-3 rounded-lg bg-white border border-gray-200 text-gray-700 font-medium shadow-sm hover:bg-gray-50">
-            ¿Cómo funciona?
-          </a>
-        </div>
-        <p class="mt-3 text-sm text-gray-500">No requiere registro. Pega tu texto y haz clic en <em>Analizar</em>.</p>
-      </div>
+  <!-- Botón para volver a la home -->
+  <nav>
+    <a href="home.html"
+       class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition"
+       title="Volver al inicio">
+      <span class="hidden sm:inline">Inicio</span>
+    </a>
+  </nav>
+</div>
 
-      <!-- Tarjeta de vista previa -->
-      <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-        <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-gray-500">Vista previa</span>
-          <span class="px-2 py-1 text-xs rounded bg-blue-50 text-blue-700 border border-blue-200">IA Activa</span>
-        </div>
-        <div class="mt-4 space-y-3">
-          <div class="p-4 rounded-lg bg-blue-50 border border-blue-200">
-            <p class="text-sm text-gray-800"><span class="font-semibold text-blue-700">Premisa:</span> La evidencia indica A → B.</p>
-          </div>
-          <div class="p-4 rounded-lg bg-yellow-50 border border-yellow-200">
-            <p class="text-sm text-gray-800"><span class="font-semibold text-yellow-700">Conclusión:</span> Por lo tanto, se cumple B.</p>
-          </div>
-          <div class="p-4 rounded-lg bg-gray-50 border border-gray-200">
-            <p class="text-sm text-gray-700">Sugerencia: añade una fuente para respaldar la relación A → B.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+	</header>
 
-    <!-- ¿Cómo funciona? -->
-    <section id="como-funciona" class="bg-white border-y border-gray-200">
-      <div class="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-3 gap-8">
-        <div class="rounded-xl border border-gray-200 p-6">
-          <div class="text-3xl">📝</div>
-          <h3 class="mt-3 font-semibold text-gray-900">1. Escribe o pega</h3>
-          <p class="mt-2 text-gray-600 text-sm">Introduce tu texto argumentativo tal como lo usarías en un ensayo o debate.</p>
-        </div>
-        <div class="rounded-xl border border-gray-200 p-6">
-          <div class="text-3xl">🔍</div>
-          <h3 class="mt-3 font-semibold text-gray-900">2. Analiza</h3>
-          <p class="mt-2 text-gray-600 text-sm">Detectamos premisas y conclusiones; contamos elementos y señalamos áreas de mejora.</p>
-        </div>
-        <div class="rounded-xl border border-gray-200 p-6">
-          <div class="text-3xl">✨</div>
-          <h3 class="mt-3 font-semibold text-gray-900">3. Mejora</h3>
-          <p class="mt-2 text-gray-600 text-sm">Sigue recomendaciones prácticas para reforzar lógica, evidencias y claridad.</p>
-        </div>
-      </div>
-    </section>
+	<main class="flex-grow max-w-7xl mx-auto p-6 md:flex md:space-x-8">
+		<!-- Panel izquierdo - Editor -->
+		<section class="flex flex-col flex-grow mb-6 md:mb-0 md:min-w-[60%]">
+			<div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+				<!-- Barra de herramientas -->
+				<div class="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
+					<div class="flex items-center space-x-2">
+						<button id="btn-bold" class="toolbar-btn" title="Negrita">
+							<span class="font-bold">B</span>
+						</button>
+						<button id="btn-italic" class="toolbar-btn" title="Cursiva">
+							<span class="italic">I</span>
+						</button>
+						<button id="btn-bullet" class="toolbar-btn" title="Lista con viñetas">
+							<span>•</span> Lista
+						</button>
+						<button id="btn-numbered" class="toolbar-btn" title="Lista numerada">
+							<span>1.</span> Lista
+						</button>
+						<div class="w-px h-6 bg-gray-300 mx-2"></div>
+						<button id="btn-undo" class="toolbar-btn" title="Deshacer">
+							<span>↶</span>
+						</button>
+						<button id="btn-redo" class="toolbar-btn" title="Rehacer">
+							<span>↷</span>
+						</button>
+					</div>
+					<button id="btn-analyze" class="analyze-btn">
+						<span class="mr-2">🔍</span>
+						Analizar Argumento
+					</button>
+				</div>
 
-    <!-- Equipo -->
-    <section id="equipo" class="max-w-7xl mx-auto px-6 py-16">
-      <h3 class="text-2xl font-bold text-gray-900">Personas involucradas</h3>
-      <p class="text-gray-600 mt-2">Este proyecto fue desarrollado por:</p>
-      <div class="mt-6 grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-        <!-- Joel -->
-        <div class="bg-white border border-gray-200 rounded-xl p-5 flex flex-col items-center text-center">
-          <img src="assets/JoelG.jpg" alt="Joel" class="w-24 h-24 rounded-full object-cover mb-4" onerror="this.onerror=null;this.src='https://i.pravatar.cc/150?img=12';">
-          <p class="font-semibold text-gray-900">Joel David González Barros</p>
-          <p class="text-sm text-gray-600">Universidad Tecnológica de Bolívar</p>
-          <p class="text-sm text-gray-500 mt-2">Cartagena de Indias, Colombia</p>
-          <a href="mailto:joegonzalez@utb.edu.co" class="text-sm text-blue-600 mt-2 hover:underline">joegonzalez@utb.edu.co</a>
-        </div>
+				<!-- Editor de texto -->
+				<div class="p-6">
+					<div id="editor" 
+						 contenteditable="true" 
+						 spellcheck="true" 
+						 class="editor-content show-placeholder" 
+						 data-placeholder-main="Escribe o pega tu texto argumentativo aquí..."
+						 data-placeholder-tip="💡 Consejo: Escribe un argumento claro con premisas que lleven a una conclusión.">
+					</div>
+				</div>
 
-        <!-- Dr. Jesús Miguel García-Gorrostieta -->
-        <div class="bg-white border border-gray-200 rounded-xl p-5 flex flex-col items-center text-center">
-          <img src="assets/DrMiguelG.png" alt="Dr. Jesús Miguel García-Gorrostieta" class="w-24 h-24 rounded-full object-cover mb-4" onerror="this.onerror=null;this.src='https://i.pravatar.cc/150?img=15';">
-          <p class="font-semibold text-gray-900">Dr. Jesús Miguel García-Gorrostieta</p>
-          <p class="text-sm text-gray-600">Universidad de la Sierra</p>
-          <p class="text-sm text-gray-500 mt-2">Sonora, México</p>
-          <a href="mailto:jgarcia@unisierra.edu.mx" class="text-sm text-blue-600 mt-2 hover:underline">jgarcia@unisierra.edu.mx</a>
-        </div>
+				<!-- Footer del análisis -->
+				<div id="analysis-footer" class="px-6 py-3 bg-blue-50 border-t border-blue-200 text-sm text-gray-600">
+					<div class="flex items-center justify-between">
+						<div class="flex items-center space-x-4">
+							<span class="flex items-center">
+								<span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+								<span id="premise-count">0 </span> premisas
+							</span>
+							<span class="flex items-center">
+								<span class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+								<span id="conclusion-count">0 </span> conclusiones
+							</span>
+						</div>
+						<span id="word-count" class="text-gray-500">0 palabras</span>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        <!-- Dr. Aurelio López-López -->
-        <div class="bg-white border border-gray-200 rounded-xl p-5 flex flex-col items-center text-center">
-          <img src="assets/DrALopezL.jpg" alt="Dr. Aurelio López-López" class="w-24 h-24 rounded-full object-cover mb-4" onerror="this.onerror=null;this.src='https://i.pravatar.cc/150?img=18';">
-          <p class="font-semibold text-gray-900">Dr. Aurelio López-López</p>
-          <p class="text-sm text-gray-600">Instituto Nacional de Astrofísica, Óptica y Electrónica</p>
-          <p class="text-sm text-gray-500 mt-2">Puebla, México</p>
-          <a href="mailto:allopez@inaoep.mx" class="text-sm text-blue-600 mt-2 hover:underline">allopez@inaoep.mx</a>
-        </div>
+		<!-- Panel derecho - Sugerencias -->
+		<aside class="w-full md:w-[900px] bg-white rounded-lg border border-gray-200 shadow-md flex flex-col">
+			<header class="p-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-t-lg">
+				<h2 class="text-xl font-semibold flex items-center">
+					<span class="mr-2">💡</span>
+					Sugerencias Inteligentes
+				</h2>
+				<p class="text-blue-100 text-sm mt-1">Mejora tu argumento con recomendaciones personalizadas</p>
+			</header>
+      
+			<section id="recommendations-panel" class="flex-grow p-6 space-y-6 overflow-y-auto">
+				<div class="text-center text-gray-500 py-8">
+					<div class="text-4xl mb-2">📝</div>
+					<p>Escribe un argumento y haz clic en "Analizar" para obtener sugerencias</p>
+				</div>
+			</section>
 
-        <!-- Dr. Samuel González-López -->
-        <div class="bg-white border border-gray-200 rounded-xl p-5 flex flex-col items-center text-center">
-          <img src="assets/DrSamuel.jpg" alt="Dr. Samuel González-López" class="w-24 h-24 rounded-full object-cover mb-4" onerror="this.onerror=null;this.src='https://i.pravatar.cc/150?img=32';">
-          <p class="font-semibold text-gray-900">Dr. Samuel González-López</p>
-          <p class="text-sm text-gray-600">Tecnológico Nacional de México Campus Nogales</p>
-          <p class="text-sm text-gray-500 mt-2">Nogales, Sonora, México</p>
-          <a href="mailto:samuel.gl@nogales.tecnm.mx" class="text-sm text-blue-600 mt-2 hover:underline">samuel.gl@nogales.tecnm.mx</a>
-        </div>
-      </div>
-    </section>
-  </main>
+			<footer class="p-4 bg-gray-50 border-t border-gray-200 text-xs text-gray-500">
+				<div class="flex items-center justify-between">
+					<span>Último análisis: <time id="last-analyzed">nunca</time></span>
+					<span id="api-status" class="flex items-center">
+						<span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>
+						API desconectada
+					</span>
+				</div>
+			</footer>
+		</aside>
+	</main>
 
-  <!-- Footer -->
-  <footer class="bg-white border-t border-gray-200">
-    <div class="max-w-7xl mx-auto px-6 py-6 text-sm text-gray-500 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-      <span>© <span id="year"></span> Analizador de Argumentos</span>
-      <a href="index.html" class="text-blue-600 hover:underline">Ir al Analizador →</a>
-    </div>
-  </footer>
+	<!-- Modal para mostrar sugerencias completas -->
+	<div id="modal-backdrop" class="modal-backdrop">
+		<div id="modal" class="modal">
+			<div class="modal-header">
+				<h3 class="modal-title">Sugerencia Completa</h3>
+				<button id="modal-close" class="modal-close">&times;</button>
+			</div>
+			<div id="modal-content" class="modal-content"></div>
+		</div>
+	</div>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+	<!-- Loading overlay -->
+	<div id="loading-overlay" class="loading-overlay">
+		<div class="loading-spinner">
+			<div class="spinner"></div>
+			<p class="mt-4 text-white font-medium">Analizando argumento...</p>
+		</div>
+	</div>
+
+	<script src="script.js"></script>
 </body>
 </html>

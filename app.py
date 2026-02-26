@@ -68,7 +68,7 @@ async def recommend(req: RecommendRequest):
     "A continuación verás una lista de premisas y conclusiones extraídas de un texto.\n"
     "Para cada elemento, genera **exactamente una** sugerencia clara y práctica que ayude a mejorar esa premisa o conclusión.\n"
     "Las sugerencias deben ser específicas y directamente aplicables.\n"
-    "Además, haz un solo párrafo por sugerencia sin agregar titulos ni numeraciones y menciones previas a las premisas o conclusiones.\n\n"
+    "Además, haz un solo párrafo por sugerencia (uno para cada premisa y conclusión) sin agregar titulos ni numeraciones y menciones previas a las premisas o conclusiones.\n\n"
     "Premisas:\n" +
     "\n".join(f"- {p}" for p in req.premises) +
     "\n\nConclusiones:\n" +
